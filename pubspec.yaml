@@ -1,8 +1,8 @@
 name: musify
-description: Music Streaming app made in Flutter!
-homepage: https://github.com/gokadzev/Musify
-repository: https://github.com/gokadzev/Musify
-issue_tracker: https://github.com/gokadzev/Musify/issues
+description: Epotify, a personalized music player based on Musify.
+homepage: https://github.com/DanielErickEM/Epotify
+repository: https://github.com/DanielErickEM/Epotify
+issue_tracker: https://github.com/DanielErickEM/Epotify/issues
 
 publish_to: 'none'
 version: 10.4.0+181 # run update.sh after changing the version
