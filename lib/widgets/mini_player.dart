@@ -51,9 +51,9 @@ class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
 
   static const double playerHeight = 72;
-  static const double _borderRadius = 20;
+  static const double _borderRadius = 8;
   static const double _artworkSize = 52;
-  static const double _artworkRadius = 14;
+  static const double _artworkRadius = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +188,7 @@ class _MiniPlayerBodyState extends State<_MiniPlayerBody>
             child: Container(
               height: MiniPlayer.playerHeight,
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHigh,
+                color: const Color(0xFF242424),
                 borderRadius: BorderRadius.circular(MiniPlayer._borderRadius),
                 boxShadow: [
                   BoxShadow(
@@ -201,7 +201,7 @@ class _MiniPlayerBodyState extends State<_MiniPlayerBody>
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(MiniPlayer._borderRadius),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
                     children: [
                       _ArtworkWidget(metadata: metadata),

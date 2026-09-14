@@ -77,9 +77,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final playlistHeight = MediaQuery.sizeOf(context).height * 0.25 / 1.1;
     return Scaffold(
-      appBar: AppBar(title: const Text('Musify.')),
+      appBar: AppBar(title: const Text('Epotify')),
       body: SingleChildScrollView(
-        padding: commonSingleChildScrollViewPadding,
+        padding: commonSingleChildScrollViewPadding.copyWith(top: 8),
         child: Column(
           children: [
             ValueListenableBuilder<String?>(

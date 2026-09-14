@@ -26,6 +26,8 @@ import 'package:musify/services/settings_manager.dart';
 ThemeMode themeMode = getThemeMode(themeModeSetting);
 Brightness brightness = getBrightnessFromThemeMode(themeMode);
 
+const _epotifyGreen = Color(0xFF20C77A);
+
 Brightness getBrightnessFromThemeMode(ThemeMode themeMode) {
   final themeBrightnessMapping = {
     ThemeMode.light: Brightness.light,
@@ -49,18 +51,13 @@ ColorScheme getAppColorScheme(
   ColorScheme? lightColorScheme,
   ColorScheme? darkColorScheme,
 ) {
-  final selectedScheme = (brightness == Brightness.light)
-      ? lightColorScheme
-      : darkColorScheme;
-
-  if (useSystemColor.value && selectedScheme != null) {
-    return selectedScheme;
-  } else {
-    return ColorScheme.fromSeed(
-      seedColor: primaryColorSetting,
-      brightness: brightness,
-    );
-  }
+  // Keep Epotify visually consistent instead of inheriting wallpaper colors.
+  return ColorScheme.fromSeed(
+    seedColor: primaryColorSetting == const Color(0xff91cef4)
+        ? _epotifyGreen
+        : primaryColorSetting,
+    brightness: brightness,
+  );
 }
 
 ThemeData getAppTheme(ColorScheme colorScheme) {
@@ -99,7 +96,7 @@ ThemeData getAppTheme(ColorScheme colorScheme) {
       : colorScheme;
 
   return ThemeData(
-    scaffoldBackgroundColor: bgColor,
+    scaffoldBackgroundColor: isLight ? bgColor : const Color(0xFF080808),
     colorScheme: effectiveColorScheme,
     cardColor: cardBgColor,
     cardTheme: base.cardTheme.copyWith(
@@ -120,7 +117,7 @@ ThemeData getAppTheme(ColorScheme colorScheme) {
         color: effectiveColorScheme.primary,
         letterSpacing: -0.5,
       ),
-      toolbarHeight: 64,
+      toolbarHeight: 58,
       iconTheme: IconThemeData(
         color: effectiveColorScheme.onSurfaceVariant,
         size: 24,
@@ -165,10 +162,10 @@ ThemeData getAppTheme(ColorScheme colorScheme) {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
     ),
     navigationBarTheme: base.navigationBarTheme.copyWith(
-      backgroundColor: bgColor,
+      backgroundColor: isLight ? bgColor : const Color(0xFF080808),
       elevation: 0,
-      height: 70,
-      indicatorColor: effectiveColorScheme.primaryContainer,
+      height: 64,
+      indicatorColor: effectiveColorScheme.primary.withValues(alpha: 0.18),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return IconThemeData(

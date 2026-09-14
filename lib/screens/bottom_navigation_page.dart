@@ -82,6 +82,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
               final items = _getNavigationItems(isOfflineMode);
 
               return Scaffold(
+                extendBody: true,
                 body: SafeArea(
                   child: Row(
                     children: [
@@ -127,7 +128,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                                 const Padding(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 8,
-                                    vertical: 8,
+                                    vertical: 4,
                                   ),
                                   child: MiniPlayer(),
                                 ),
@@ -141,6 +142,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                 ),
                 bottomNavigationBar: !isLargeScreen
                     ? NavigationBar(
+                        backgroundColor: const Color(0xFF080808),
                         selectedIndex: _getCurrentIndex(items, isOfflineMode),
                         labelBehavior: languageSetting == const Locale('en', '')
                             ? NavigationDestinationLabelBehavior
