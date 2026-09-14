@@ -430,7 +430,7 @@ class _SongBarState extends State<SongBar> {
         : widget.playCount;
 
     return Material(
-      color: widget.backgroundColor ?? colorScheme.surfaceContainerLow,
+      color: widget.backgroundColor ?? Colors.transparent,
       borderRadius: widget.borderRadius,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -438,10 +438,7 @@ class _SongBarState extends State<SongBar> {
         child: Padding(
           padding:
               widget.barPadding ??
-              const EdgeInsetsDirectional.symmetric(
-                vertical: 10,
-                horizontal: 12,
-              ),
+              const EdgeInsetsDirectional.symmetric(vertical: 8, horizontal: 4),
           child: Row(
             children: [
               if (widget.rank != null) ...[
@@ -515,7 +512,7 @@ class _SongBarState extends State<SongBar> {
   }
 
   Widget _buildAlbumArt(ColorScheme colorScheme) {
-    const size = 52.0;
+    const size = 48.0;
     final isDurationAvailable =
         widget.showMusicDuration && widget.song['duration'] != null;
 
@@ -537,7 +534,7 @@ class _SongBarState extends State<SongBar> {
           if (isDownloading)
             Positioned.fill(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(4),
                 child: ColoredBox(
                   color: colorScheme.scrim.withValues(alpha: 0.42),
                   child: Center(
@@ -743,7 +740,7 @@ class _OfflineArtwork extends StatelessWidget {
       width: size,
       height: size,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(4),
         child: Stack(
           children: [
             Image.file(
@@ -815,7 +812,7 @@ class _OnlineArtwork extends StatelessWidget {
             memCacheWidth: 256,
             memCacheHeight: 256,
             imageBuilder: (context, imageProvider) => ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(4),
               child: Stack(
                 children: [
                   Image(

@@ -370,7 +370,7 @@ class _ArtistPageState extends State<ArtistPage> {
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          padding: commonListViewBottomPadding,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           itemCount: _topSongs.length,
           itemBuilder: (context, index) => RepaintBoundary(
             key: listItemKey('artist_top_song', index, _topSongs[index]),
