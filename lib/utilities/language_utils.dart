@@ -3,6 +3,7 @@ import 'package:musify/localization/app_localizations.dart';
 
 // Supported app language codes.
 const appLanguages = <String>{
+  'es',
   'en',
   'zh',
   'et',
@@ -19,7 +20,6 @@ const appLanguages = <String>{
   'ru',
   'pl',
   'pt',
-  'es',
   'sv',
   'ta',
   'tr',
@@ -88,7 +88,7 @@ String getLanguageDisplayName(BuildContext context, String languageCode) {
 Locale getLocaleFromLanguageCode(String? languageCode) {
   // Early return for null case
   if (languageCode == null) {
-    return const Locale('en');
+    return const Locale('es');
   }
 
   // Handle codes with script parts
@@ -116,5 +116,5 @@ Locale getLocaleFromLanguageCode(String? languageCode) {
   }
 
   // Default fallback
-  return const Locale('en');
+  return const Locale('es');
 }
