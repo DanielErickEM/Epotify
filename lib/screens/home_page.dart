@@ -106,6 +106,8 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
+            _buildQuickActions(context),
+            _buildRecentlyPlayedSection(context),
             _buildSuggestedPlaylists(playlistHeight),
             _buildSuggestedPlaylists(playlistHeight, showOnlyLiked: true),
             _buildCurrentMonthRecapSection(),
@@ -114,6 +116,116 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 4, 8, 12),
+      child: Row(
+        children: [
+          _buildQuickAction(
+            context,
+            label: context.l10n!.recentlyPlayed,
+            icon: FluentIcons.history_24_filled,
+            onTap: () => context.go('/library/userSongs/recents'),
+          ),
+          const SizedBox(width: 8),
+          _buildQuickAction(
+            context,
+            label: context.l10n!.likedSongs,
+            icon: FluentIcons.heart_24_filled,
+            onTap: () => context.go('/library/userSongs/liked'),
+          ),
+          const SizedBox(width: 8),
+          _buildQuickAction(
+            context,
+            label: context.l10n!.offlineSongs,
+            icon: FluentIcons.cloud_off_24_filled,
+            onTap: () => context.go('/library/userSongs/offline'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickAction(
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Expanded(
+      child: Material(
+        color: colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(10),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: colorScheme.primary),
+                const SizedBox(height: 6),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentlyPlayedSection(BuildContext context) {
+    return ValueListenableBuilder<List>(
+      valueListenable: userRecentlyPlayed,
+      builder: (_, recentlyPlayed, __) {
+        final songs = recentlyPlayed.whereType<Map>().take(6).toList();
+        if (songs.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          children: [
+            SectionHeader(
+              title: context.l10n!.recentlyPlayed,
+              icon: FluentIcons.history_24_filled,
+              actionButton: IconButton(
+                onPressed: () => context.go('/library/userSongs/recents'),
+                icon: const Icon(FluentIcons.arrow_right_24_regular),
+                tooltip: context.l10n!.recentlyPlayed,
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: songs.length,
+              itemBuilder: (context, index) => SongBar(
+                songs[index],
+                true,
+                borderRadius: getItemBorderRadius(index, songs.length),
+                onPlay: () => audioHandler.playPlaylistSong(
+                  playlist: {
+                    'title': context.l10n!.recentlyPlayed,
+                    'list': songs,
+                  },
+                  songIndex: index,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
