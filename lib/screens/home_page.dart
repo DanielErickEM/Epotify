@@ -108,6 +108,7 @@ class _HomePageState extends State<HomePage> {
             ),
             _buildQuickActions(context),
             _buildRecentlyPlayedSection(context),
+            _buildLikedSongsSection(context),
             _buildSuggestedPlaylists(playlistHeight),
             _buildSuggestedPlaylists(playlistHeight, showOnlyLiked: true),
             _buildCurrentMonthRecapSection(),
@@ -219,6 +220,44 @@ class _HomePageState extends State<HomePage> {
                     'title': context.l10n!.recentlyPlayed,
                     'list': songs,
                   },
+                  songIndex: index,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildLikedSongsSection(BuildContext context) {
+    return ValueListenableBuilder<List>(
+      valueListenable: userLikedSongsList,
+      builder: (_, likedSongs, __) {
+        final songs = likedSongs.whereType<Map>().take(6).toList();
+        if (songs.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          children: [
+            SectionHeader(
+              title: context.l10n!.likedSongs,
+              icon: FluentIcons.heart_24_filled,
+              actionButton: IconButton(
+                onPressed: () => context.go('/library/userSongs/liked'),
+                icon: const Icon(FluentIcons.arrow_right_24_regular),
+                tooltip: context.l10n!.likedSongs,
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: songs.length,
+              itemBuilder: (context, index) => SongBar(
+                songs[index],
+                true,
+                borderRadius: getItemBorderRadius(index, songs.length),
+                onPlay: () => audioHandler.playPlaylistSong(
+                  playlist: {'title': context.l10n!.likedSongs, 'list': songs},
                   songIndex: index,
                 ),
               ),
