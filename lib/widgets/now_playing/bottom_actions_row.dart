@@ -53,21 +53,41 @@ class BottomActionsRow extends StatefulWidget {
 class _BottomActionsRowState extends State<BottomActionsRow> {
   late final ValueNotifier<bool> _songLikeStatus;
   late final ValueNotifier<bool> _songOfflineStatus;
-  late final String? audioId = widget.metadata.extras?['ytid'];
-  late final bool isRadioStation = widget.metadata.extras?['isLive'] ?? false;
+  late String? _audioId;
+  late bool _isRadioStation;
 
   @override
   void initState() {
     super.initState();
+    _audioId = widget.metadata.extras?['ytid'];
+    _isRadioStation = widget.metadata.extras?['isLive'] ?? false;
+    _songLikeStatus = ValueNotifier<bool>(_currentLikeStatus());
+    _songOfflineStatus = ValueNotifier<bool>(isSongAlreadyOffline(_audioId));
+    _addLikeStatusListener();
+    userOfflineSongs.addListener(_syncOfflineStatus);
+  }
+
+  String? get audioId => _audioId;
+  bool get isRadioStation => _isRadioStation;
+
+  bool _currentLikeStatus() => isRadioStation
+      ? isRadioStationLiked(audioId ?? '')
+      : isSongAlreadyLiked(audioId);
+
+  void _addLikeStatusListener() {
     if (isRadioStation) {
-      _songLikeStatus = ValueNotifier<bool>(isRadioStationLiked(audioId ?? ''));
       userLikedRadioStations.addListener(_syncRadioLikeStatus);
     } else {
-      _songLikeStatus = ValueNotifier<bool>(isSongAlreadyLiked(audioId));
       userLikedSongsList.addListener(_syncLikeStatus);
     }
-    _songOfflineStatus = ValueNotifier<bool>(isSongAlreadyOffline(audioId));
-    userOfflineSongs.addListener(_syncOfflineStatus);
+  }
+
+  void _removeLikeStatusListener() {
+    if (isRadioStation) {
+      userLikedRadioStations.removeListener(_syncRadioLikeStatus);
+    } else {
+      userLikedSongsList.removeListener(_syncLikeStatus);
+    }
   }
 
   void _syncLikeStatus() {
@@ -94,24 +114,21 @@ class _BottomActionsRowState extends State<BottomActionsRow> {
   @override
   void didUpdateWidget(BottomActionsRow oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final oldAudioId = oldWidget.metadata.extras?['ytid'];
-    if (oldAudioId != audioId) {
-      if (isRadioStation) {
-        _songLikeStatus.value = isRadioStationLiked(audioId ?? '');
-      } else {
-        _songLikeStatus.value = isSongAlreadyLiked(audioId);
-      }
+    final newAudioId = widget.metadata.extras?['ytid'];
+    final newIsRadioStation = widget.metadata.extras?['isLive'] ?? false;
+    if (newAudioId != audioId || newIsRadioStation != isRadioStation) {
+      _removeLikeStatusListener();
+      _audioId = newAudioId;
+      _isRadioStation = newIsRadioStation;
+      _addLikeStatusListener();
+      _songLikeStatus.value = _currentLikeStatus();
       _songOfflineStatus.value = isSongAlreadyOffline(audioId);
     }
   }
 
   @override
   void dispose() {
-    if (isRadioStation) {
-      userLikedRadioStations.removeListener(_syncRadioLikeStatus);
-    } else {
-      userLikedSongsList.removeListener(_syncLikeStatus);
-    }
+    _removeLikeStatusListener();
     userOfflineSongs.removeListener(_syncOfflineStatus);
     _songLikeStatus.dispose();
     _songOfflineStatus.dispose();
